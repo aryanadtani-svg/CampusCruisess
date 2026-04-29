@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusCruise.com — Transportation Across Texas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --navy: #1B2A5E;
+    --navy-deep: #0E1A3D;
+    --crimson: #8B1A2E;
+    --crimson-light: #A82438;
+    --gold: #C9A84C;
+    --gold-light: #E2C46A;
+    --white: #FFFFFF;
+    --off-white: #F7F6F2;
+    --light: #EEF0F7;
+    --text: #1A1A2E;
+    --muted: #5A6080;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 64px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    color: var(--white);
+    letter-spacing: 3px;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-book-btn {
+    background: var(--crimson);
+    color: var(--white) !important;
+    padding: 8px 20px !important;
+    border-radius: 4px;
+    font-weight: 700 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-book-btn:hover { background: var(--crimson-light) !important; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 64px;
+  }
+  .hero-bg-pattern {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px);
+  }
+  .hero-gold-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 6px; background: var(--gold);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto; padding: 0 5%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-eyebrow {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 2px; background: var(--gold);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 0.95;
+    color: var(--white);
+    letter-spacing: 4px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title span { color: var(--gold); display: block; }
+  .hero-subtitle {
+    font-size: 1.05rem; line-height: 1.7;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-cta-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--crimson); color: var(--white);
+    padding: 14px 32px; border: none; border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--crimson-light); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    padding: 14px 32px; border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  /* Hero stats */
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--gold); letter-spacing: 2px;
+  }
+  .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; }
+
+  /* Hero right — Route map visual */
+  .hero-visual {
+    display: flex; flex-direction: column; gap: 1rem; align-items: flex-end;
+  }
+  .route-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 3px solid var(--gold);
+    padding: 16px 22px;
+    border-radius: 6px;
+    width: 100%;
+    animation: slideIn 0.6s ease forwards;
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  .route-card:nth-child(1) { animation-delay: 0.3s; }
+  .route-card:nth-child(2) { animation-delay: 0.5s; }
+  .route-card:nth-child(3) { animation-delay: 0.7s; }
+  .route-card:nth-child(4) { animation-delay: 0.9s; }
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .route-row { display: flex; align-items: center; justify-content: space-between; }
+  .route-name { font-size: 0.95rem; font-weight: 600; color: var(--white); }
+  .route-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--gold); letter-spacing: 1px; }
+  .route-time { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-top: 3px; }
+  .route-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin: 0 6px; }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 90px 5%; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--crimson);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .section-sub {
+    font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 560px;
+  }
+
+  /* ── AMENITIES ── */
+  #amenities { background: var(--off-white); }
+  .amenities-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .amenity-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 2rem;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(27,42,94,0.06);
+  }
+  .amenity-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(27,42,94,0.12); }
+  .amenity-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .amenity-title { font-weight: 700; font-size: 1rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .amenity-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── ROUTES ── */
+  #routes { background: var(--navy); }
+  #routes .section-title { color: var(--white); }
+  #routes .section-sub { color: rgba(255,255,255,0.55); }
+  #routes .section-label { color: var(--gold); }
+
+  .routes-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px; overflow: hidden;
+    margin-top: 3rem;
+  }
+  .route-item {
+    background: rgba(255,255,255,0.04);
+    padding: 1.8rem;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .route-item:hover { background: rgba(255,255,255,0.09); }
+  .route-tier {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .route-cities { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem; }
+  .route-fare { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--gold); letter-spacing: 1px; }
+  .route-duration { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+  /* ── BOOK ── */
+  #book { background: var(--off-white); }
+  .book-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; margin-top: 3rem; }
+
+  .booking-form {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 30px rgba(27,42,94,0.1);
+  }
+  .form-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 1.8rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+  .form-input, .form-select {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #DDE0EC; border-radius: 5px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text);
+    background: var(--off-white);
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus { outline: none; border-color: var(--navy); background: var(--white); }
+  .form-submit {
+    width: 100%; padding: 15px;
+    background: var(--crimson); color: var(--white);
+    border: none; border-radius: 5px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--crimson-light); }
+
+  /* Safety & QR column */
+  .book-sidebar {}
+  .safety-block {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+  }
+  .safety-block h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 2px; color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .safety-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 0.8rem; }
+  .safety-check { color: var(--gold); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .safety-text { font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.75); }
+
+  /* QR Code block */
+  .qr-block {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(27,42,94,0.08);
+    border: 2px solid var(--light);
+  }
+  .qr-block h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .qr-block p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
+  #qrcode { display: flex; justify-content: center; margin-bottom: 1rem; }
+  #qrcode canvas, #qrcode img { border-radius: 6px; border: 6px solid var(--off-white); }
+  .qr-url {
+    font-size: 0.78rem; color: var(--crimson); font-weight: 600;
+    word-break: break-all; letter-spacing: 0.5px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  #how { background: var(--white); }
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; }
+  .step-item { text-align: center; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--navy); color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+  }
+  .step-title { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── PRICING ── */
+  #pricing { background: var(--light); }
+  .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .price-card {
+    background: var(--white); border-radius: 10px; padding: 2rem;
+    box-shadow: 0 2px 15px rgba(27,42,94,0.06);
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-5px); box-shadow: 0 10px 35px rgba(27,42,94,0.12); }
+  .price-card.featured {
+    background: var(--navy);
+    box-shadow: 0 6px 30px rgba(27,42,94,0.3);
+  }
+  .price-card.featured::before {
+    content: 'MOST POPULAR'; position: absolute; top: 16px; right: -28px;
+    background: var(--crimson); color: var(--white);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 2px;
+    padding: 4px 40px; transform: rotate(45deg);
+  }
+  .price-tier { font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+  .price-range { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .price-card:not(.featured) .price-range { color: var(--navy); }
+  .price-card.featured .price-range { color: var(--white); }
+  .price-routes { font-size: 0.8rem; margin-bottom: 1.2rem; }
+  .price-card:not(.featured) .price-routes { color: var(--muted); }
+  .price-card.featured .price-routes { color: rgba(255,255,255,0.55); }
+  .price-feature { font-size: 0.85rem; display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+  .price-card:not(.featured) .price-feature { color: var(--text); }
+  .price-card.featured .price-feature { color: rgba(255,255,255,0.8); }
+  .price-check { color: var(--gold); }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--off-white); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .testimonial-card {
+    background: var(--white); border-radius: 10px; padding: 1.8rem;
+    border-left: 4px solid var(--gold);
+    box-shadow: 0 2px 12px rgba(27,42,94,0.06);
+  }
+  .testimonial-text { font-size: 0.92rem; line-height: 1.7; color: var(--text); font-style: italic; margin-bottom: 1.2rem; }
+  .testimonial-name { font-weight: 700; font-size: 0.88rem; color: var(--navy); }
+  .testimonial-school { font-size: 0.78rem; color: var(--muted); }
+  .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 0.8rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy-deep);
+    color: rgba(255,255,255,0.6);
+    padding: 3rem 5% 2rem;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+  .footer-brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--white); letter-spacing: 3px; margin-bottom: 0.8rem; }
+  .footer-brand-name span { color: var(--gold); }
+  .footer-tagline { font-size: 0.85rem; line-height: 1.6; color: rgba(255,255,255,0.5); margin-bottom: 1rem; }
+  .footer-h { font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.5rem; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 2rem 0 1rem; }
+  .footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+  .footer-gold-bar { width: 100%; height: 4px; background: var(--gold); margin-bottom: 0; }
+
+  /* ── BOOKING MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,15,35,0.85); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--white); border-radius: 12px; padding: 2.5rem;
+    max-width: 500px; width: 90%; position: relative;
+    animation: modalPop 0.25s ease;
+  }
+  @keyframes modalPop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1.2rem;
+    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted);
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); margin-bottom: 0.3rem; }
+  .modal-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.8rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .amenities-grid, .steps-grid, .pricing-cards, .testimonials-grid, .routes-grid { grid-template-columns: 1fr 1fr; }
+    .book-layout { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    nav { padding: 0 4%; }
+    .nav-links { gap: 1rem; }
+  }
+  @media (max-width: 600px) {
+    .amenities-grid, .steps-grid, .pricing-cards, .testimonials-grid, .routes-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+    .nav-links { display: none; }
+  }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">CAMPUS<span>CRUISE</span></a>
+  <ul class="nav-links">
+    <li><a href="#routes">Routes</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#book" class="nav-book-btn">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-gold-bar"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Texas Student Transport</div>
+      <h1 class="hero-title">CAMPUS<span>CRUISE</span></h1>
+      <p class="hero-subtitle">The smartest way to travel between Texas campuses and cities. Affordable, safe, and built for students — with Wi-Fi, USB charging, and background-checked professional drivers.</p>
+      <div class="hero-cta-group">
+        <a href="#book" class="btn-primary">Book Your Ride</a>
+        <a href="#routes" class="btn-outline">View Routes</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">12</div>
+          <div class="stat-label">Buses</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Texas Cities</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">$12</div>
+          <div class="stat-label">Starting From</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">2×</div>
+          <div class="stat-label">Daily Trips</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="route-card">
+        <div class="route-row">
+          <span class="route-name">Dallas <span class="route-dot"></span> Austin</span>
+          <span class="route-price">FROM $25</span>
+        </div>
+        <div class="route-time">⏱ ~3.5 hrs &nbsp;·&nbsp; 7:00 AM &amp; 2:00 PM</div>
+      </div>
+      <div class="route-card">
+        <div class="route-row">
+          <span class="route-name">Houston <span class="route-dot"></span> College Station</span>
+          <span class="route-price">FROM $20</span>
+        </div>
+        <div class="route-time">⏱ ~1.5 hrs &nbsp;·&nbsp; 7:00 AM &amp; 2:00 PM</div>
+      </div>
+      <div class="route-card">
+        <div class="route-row">
+          <span class="route-name">Dallas <span class="route-dot"></span> Houston</span>
+          <span class="route-price">FROM $35</span>
+        </div>
+        <div class="route-time">⏱ ~4 hrs &nbsp;·&nbsp; 6:30 AM &amp; 5:00 PM</div>
+      </div>
+      <div class="route-card">
+        <div class="route-row">
+          <span class="route-name">Austin <span class="route-dot"></span> San Antonio</span>
+          <span class="route-price">FROM $15</span>
+        </div>
+        <div class="route-time">⏱ ~1.5 hrs &nbsp;·&nbsp; 7:00 AM &amp; 2:00 PM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+<section id="amenities">
+  <div class="section-inner">
+    <div class="section-label reveal">Premium Amenities</div>
+    <h2 class="section-title reveal">Everything you need<br><em>on the road</em></h2>
+    <p class="section-sub reveal">We didn't just build a bus service. We built the ride you actually want to take.</p>
+    <div class="amenities-grid">
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">📶</div>
+        <div class="amenity-title">High-Speed Wi-Fi</div>
+        <div class="amenity-desc">Stay productive or stream the whole way. Free onboard Wi-Fi on every route, every trip.</div>
+      </div>
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">🔌</div>
+        <div class="amenity-title">USB &amp; Power Outlets</div>
+        <div class="amenity-desc">Every seat has USB-A, USB-C, and standard power outlets. Arrive fully charged.</div>
+      </div>
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">🛡️</div>
+        <div class="amenity-title">Background-Checked Drivers</div>
+        <div class="amenity-desc">Every CampusCruise driver passes thorough background checks and professional training. Parents rest easy.</div>
+      </div>
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">🍿</div>
+        <div class="amenity-title">Complimentary Snacks</div>
+        <div class="amenity-desc">Complimentary bottled water and snacks on every journey. The little things matter.</div>
+      </div>
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">💺</div>
+        <div class="amenity-title">Reclining Seats</div>
+        <div class="amenity-desc">Premium reclining seats with extra legroom. Not your typical bus experience.</div>
+      </div>
+      <div class="amenity-card reveal">
+        <div class="amenity-icon">📍</div>
+        <div class="amenity-title">Campus Pickup Hubs</div>
+        <div class="amenity-desc">No trekking to a bus terminal. We pick up on or next to campus — right where you live.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTES -->
+<section id="routes">
+  <div class="section-inner">
+    <div class="section-label reveal">Service Network</div>
+    <h2 class="section-title reveal">Routes across<br><em style="color: var(--gold)">the Texas corridor</em></h2>
+    <p class="section-sub reveal">Connecting DFW, Houston, Austin, San Antonio, Waco &amp; College Station — 2 departures daily.</p>
+    <div class="routes-grid reveal">
+      <div class="route-item">
+        <div class="route-tier">Short Route</div>
+        <div class="route-cities">Dallas ↔ Waco</div>
+        <div class="route-fare">$12–18</div>
+        <div class="route-duration">~1.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Short Route</div>
+        <div class="route-cities">Austin ↔ College Station</div>
+        <div class="route-fare">$12–18</div>
+        <div class="route-duration">~2 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Short Route</div>
+        <div class="route-cities">Austin ↔ San Antonio</div>
+        <div class="route-fare">$12–18</div>
+        <div class="route-duration">~1.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Medium Route</div>
+        <div class="route-cities">Dallas ↔ Austin</div>
+        <div class="route-fare">$20–30</div>
+        <div class="route-duration">~3.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Medium Route</div>
+        <div class="route-cities">Houston ↔ College Station</div>
+        <div class="route-fare">$20–30</div>
+        <div class="route-duration">~1.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Medium Route</div>
+        <div class="route-cities">Houston ↔ San Antonio</div>
+        <div class="route-fare">$20–30</div>
+        <div class="route-duration">~3.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Long Route</div>
+        <div class="route-cities">Dallas ↔ Houston</div>
+        <div class="route-fare">$30–45</div>
+        <div class="route-duration">~4 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Long Route</div>
+        <div class="route-cities">San Antonio ↔ Dallas</div>
+        <div class="route-fare">$30–45</div>
+        <div class="route-duration">~4.5 hrs</div>
+      </div>
+      <div class="route-item">
+        <div class="route-tier">Long Route</div>
+        <div class="route-cities">Austin ↔ Houston</div>
+        <div class="route-fare">$30–45</div>
+        <div class="route-duration">~2.5 hrs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label reveal">Simple Process</div>
+    <h2 class="section-title reveal">Book a ride in<br><em>under a minute</em></h2>
+    <div class="steps-grid">
+      <div class="step-item reveal">
+        <div class="step-num">1</div>
+        <div class="step-title">Pick Your Route</div>
+        <div class="step-desc">Choose from our Texas city network. Short, medium, or long — we've got you covered.</div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">2</div>
+        <div class="step-title">Select Your Date</div>
+        <div class="step-desc">Morning (6:30–9 AM) or evening (5–8 PM) departures, 7 days a week.</div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">3</div>
+        <div class="step-title">Pay Securely</div>
+        <div class="step-desc">Student ID gets you the discounted rate. Group and family bookings available too.</div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">4</div>
+        <div class="step-title">Show &amp; Go</div>
+        <div class="step-desc">Digital boarding pass on your phone. Meet at your campus pickup hub and ride in comfort.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-label reveal">Transparent Pricing</div>
+    <h2 class="section-title reveal">Cheaper than flying.<br><em>Smarter than driving.</em></h2>
+    <p class="section-sub reveal">No hidden fees. Student discounts built in. Always cheaper than a last-minute flight.</p>
+    <div class="pricing-cards">
+      <div class="price-card reveal">
+        <div class="price-tier">Short Routes</div>
+        <div class="price-range">$12–18</div>
+        <div class="price-routes">Dallas ↔ Waco · Austin ↔ College Station</div>
+        <div class="price-feature"><span class="price-check">✓</span> Free Wi-Fi &amp; USB charging</div>
+        <div class="price-feature"><span class="price-check">✓</span> Complimentary snacks</div>
+        <div class="price-feature"><span class="price-check">✓</span> Campus pickup</div>
+        <div class="price-feature"><span class="price-check">✓</span> Digital boarding pass</div>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="price-tier">Medium Routes</div>
+        <div class="price-range">$20–30</div>
+        <div class="price-routes">Dallas ↔ Austin · Houston ↔ College Station</div>
+        <div class="price-feature"><span class="price-check">✓</span> Free Wi-Fi &amp; USB charging</div>
+        <div class="price-feature"><span class="price-check">✓</span> Complimentary snacks</div>
+        <div class="price-feature"><span class="price-check">✓</span> Campus pickup</div>
+        <div class="price-feature"><span class="price-check">✓</span> Real-time trip tracking</div>
+        <div class="price-feature"><span class="price-check">✓</span> Loyalty points earned</div>
+      </div>
+      <div class="price-card reveal">
+        <div class="price-tier">Long Routes</div>
+        <div class="price-range">$30–45</div>
+        <div class="price-routes">Dallas ↔ Houston · Austin ↔ Houston</div>
+        <div class="price-feature"><span class="price-check">✓</span> Free Wi-Fi &amp; USB charging</div>
+        <div class="price-feature"><span class="price-check">✓</span> Complimentary snacks</div>
+        <div class="price-feature"><span class="price-check">✓</span> Campus pickup</div>
+        <div class="price-feature"><span class="price-check">✓</span> Real-time trip tracking</div>
+        <div class="price-feature"><span class="price-check">✓</span> Priority boarding</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-inner">
+    <div class="section-label reveal">What Students Say</div>
+    <h2 class="section-title reveal">Real riders,<br><em>real reviews</em></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Way cheaper than flying home for Thanksgiving. The Wi-Fi actually worked the whole time and the seats were so comfortable. This is my new go-to."</p>
+        <div class="testimonial-name">Jalen M.</div>
+        <div class="testimonial-school">UT Austin → Dallas</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"As a mom, knowing the drivers are background-checked makes all the difference. I feel completely at ease when my daughter uses CampusCruise to come home."</p>
+        <div class="testimonial-name">Sandra T.</div>
+        <div class="testimonial-school">Parent · College Station</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Used it for our whole Greek chapter trip to Houston. Group discount was great and we didn't have to worry about a designated driver or parking."</p>
+        <div class="testimonial-name">Priya K.</div>
+        <div class="testimonial-school">Texas A&amp;M → Houston</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book">
+  <div class="section-inner">
+    <div class="section-label reveal">Reserve Your Seat</div>
+    <h2 class="section-title reveal">Book your ride today</h2>
+    <div class="book-layout">
+      <div class="booking-form reveal">
+        <div class="form-title">Find Your Route</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <select class="form-select">
+              <option>Dallas / Fort Worth</option>
+              <option>Houston</option>
+              <option>Austin</option>
+              <option>San Antonio</option>
+              <option>Waco</option>
+              <option>College Station</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-select">
+              <option>Austin</option>
+              <option>Dallas / Fort Worth</option>
+              <option>Houston</option>
+              <option>San Antonio</option>
+              <option>College Station</option>
+              <option>Waco</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Travel Date</label>
+            <input type="date" class="form-input" id="travelDate">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Departure Time</label>
+            <select class="form-select">
+              <option>Morning (6:30–9 AM)</option>
+              <option>Evening (5–8 PM)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Passengers</label>
+            <select class="form-select">
+              <option>1 Passenger</option>
+              <option>2 Passengers</option>
+              <option>3 Passengers</option>
+              <option>4+ (Group Rate)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rider Type</label>
+            <select class="form-select">
+              <option>Student (with ID)</option>
+              <option>Young Professional</option>
+              <option>Parent Purchase</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Promo / Referral Code</label>
+          <input type="text" class="form-input" placeholder="e.g. FIRSTRIDE or CAMPUS10">
+        </div>
+        <button class="form-submit" onclick="handleBook()">FIND AVAILABLE SEATS →</button>
+      </div>
+
+      <div class="book-sidebar reveal">
+        <div class="safety-block">
+          <h3>Know They Got There Safe.</h3>
+          <div class="safety-item">
+            <span class="safety-check">✓</span>
+            <span class="safety-text">All drivers pass thorough background checks and professional training before their first trip</span>
+          </div>
+          <div class="safety-item">
+            <span class="safety-check">✓</span>
+            <span class="safety-text">Real-time GPS trip tracking — share your journey with family any time</span>
+          </div>
+          <div class="safety-item">
+            <span class="safety-check">✓</span>
+            <span class="safety-text">Scheduled, reliable departures — no surge pricing surprises like rideshare</span>
+          </div>
+          <div class="safety-item">
+            <span class="safety-check">✓</span>
+            <span class="safety-text">Campus pickup removes the need to navigate unfamiliar bus terminals alone</span>
+          </div>
+        </div>
+        <div class="qr-block">
+          <h3>Scan to Book on Mobile</h3>
+          <p>Open CampusCruise instantly on your phone</p>
+          <div id="qrcode"></div>
+          <div class="qr-url">campuscruise.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">CAMPUS<span>CRUISE</span></div>
+      <p class="footer-tagline">Transportation for College Students &amp; Young Professionals across the Texas corridor. Affordable · Safe · Comfortable.</p>
+      <p style="font-size:0.78rem; color: rgba(255,255,255,0.3);">© 2026 CampusCruise. All rights reserved.</p>
+    </div>
+    <div>
+      <div class="footer-h">Routes</div>
+      <ul class="footer-links">
+        <li><a href="#routes">Dallas ↔ Austin</a></li>
+        <li><a href="#routes">Houston ↔ College Station</a></li>
+        <li><a href="#routes">Dallas ↔ Houston</a></li>
+        <li><a href="#routes">Austin ↔ San Antonio</a></li>
+        <li><a href="#routes">All Routes</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Safety</a></li>
+        <li><a href="#">Campus Ambassadors</a></li>
+        <li><a href="#">University Partners</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Support</div>
+      <ul class="footer-links">
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="#">Group Bookings</a></li>
+        <li><a href="#">Student Discounts</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <span class="footer-copy">campuscruise.com &nbsp;·&nbsp; info@campuscruise.com &nbsp;·&nbsp; Texas, USA</span>
+    <span class="footer-copy">Instagram &nbsp;·&nbsp; TikTok &nbsp;·&nbsp; Facebook</span>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">Seats Available! 🎉</div>
+    <div class="modal-sub">Your route is ready to book. Complete your reservation below.</div>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input type="text" class="form-input" placeholder="Your full name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Student Email</label>
+      <input type="email" class="form-input" placeholder="you@university.edu">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <input type="tel" class="form-input" placeholder="(xxx) xxx-xxxx">
+    </div>
+    <button class="form-submit" onclick="confirmBooking()">CONFIRM &amp; PAY SECURELY →</button>
+  </div>
+</div>
+
+<script>
+  // QR code generation
+  window.addEventListener('load', () => {
+    const siteUrl = window.location.href.split('#')[0];
+    new QRCode(document.getElementById("qrcode"), {
+      text: 'https://www.campuscruise.com',
+      width: 140, height: 140,
+      colorDark: "#1B2A5E",
+      colorLight: "#FFFFFF",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  });
+
+  // Set min date to today
+  const dateInput = document.getElementById('travelDate');
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+  }
+
+  // Booking
+  function handleBook() {
+    document.getElementById('bookModal').classList.add('active');
+  }
+  function closeModal() {
+    document.getElementById('bookModal').classList.remove('active');
+  }
+  function confirmBooking() {
+    closeModal();
+    alert('🎉 Booking confirmed! Check your email for your digital boarding pass. See you on the road!');
+  }
+  document.getElementById('bookModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
